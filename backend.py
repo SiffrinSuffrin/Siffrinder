@@ -21,4 +21,5 @@ def projection2D(a: np.array, c: np.array, O: np.array, e: np.array) -> tuple:
     
     d *= (a - c)
 
-    return ((e.item(2) * d.item(0)) / d.item(2)) + e.item(0), ((e.item(2) * d.item(1)) / d.item(2)) + e.item(1)
+    return ((e.item(2) * d.item(0)) / d.item(2)) + e.item(0), 
+    ((e.item(2) * d.item(1)) / d.item(2)) + e.item(1)
