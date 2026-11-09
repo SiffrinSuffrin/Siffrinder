@@ -101,25 +101,22 @@ class point3D(point2D):
         angleZ = np.radians(angles.item(2))
 
         temp = np.array([self.x, self.y, self.z])
-        temp = temp @ np.array([1, 0, 0, 0],
-                               [0, np.cos(angleX), np.sin(angleX), 0],
-                               [0, -1 * np.sin(angleX), np.cos(angleX), 0]
-                               [0, 0, 0, 1]) # rotate by x
+        temp = temp @ np.array([[1, 0, 0],
+                                [0, np.cos(angleX), np.sin(angleX)],
+                                [0, -1 * np.sin(angleX), np.cos(angleX)]]) # rotate by x
 
-        temp = temp @ np.array([np.cos(angleY), 0, -1 * np.sin(angleY), 0],
-                               [0, 1, 0, 0],
-                               [np.sin(angleY), 0, np.cos(angleY), 0],
-                               [0, 0, 0, 1]) # rotate by y
+        temp = temp @ np.array([[np.cos(angleY), 0, -1 * np.sin(angleY)],
+                                [0, 1, 0],
+                                [np.sin(angleY), 0, np.cos(angleY)]]) # rotate by y
         
-        temp = temp @ np.array([np.cos(angleZ), np.sin(angleZ), 0, 0],
-                               [-1 * np.sin(angleZ), np.cos(angleZ), 0, 0],
-                               [0, 0, 1, 0],
-                               [0, 0, 0, 1]) # last but not *z*east, rotate by z
+        temp = temp @ np.array([[np.cos(angleZ), np.sin(angleZ), 0],
+                                [-1 * np.sin(angleZ), np.cos(angleZ), 0],
+                                [0, 0, 1]]) # last but not *z*east, rotate by z
 
         self.x = temp.item(0)
         self.y = temp.item(1)
         self.z = temp.item(2)
-
+        
 class line3D:
     def __init__(self, vertex0: point3D, vertex1: point3D) -> None:
         self.vertex0 = vertex0
