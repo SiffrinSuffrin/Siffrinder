@@ -219,7 +219,8 @@ class screen:
         screen = [["░░" for y in range(self.height)] for x in range(self.width)]
 
         for coordinate in a:
-            screen[round(coordinate[0])][round(coordinate[1])] = "▓▓"
+            if 0 <= round(coordinate.item(0)) < self.width and 0 <= round(coordinate.item(1)) < self.height:
+                screen[round(coordinate.item(0))][round(coordinate.item(1))] = "▓▓"
 
-        for row in reversed(list(zip(*screen))):
+        for row in reversed(list(zip(*screen))): # not ashamed to admit i googled this
             print("".join(row))
