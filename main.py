@@ -1,31 +1,31 @@
 import numpy as np
 
 def projection2D(a: np.array, c: np.array, O: np.array, e: np.array) -> np.array:
-    d = np.array(
+    d = d @ np.array(
         [[1, 0, 0],
         [0, np.cos(np.radians(O.item(0))), np.sin(np.radians(O.item(0)))],
         [0, -1 * np.sin(np.radians(O.item(0))), np.cos(np.radians(O.item(0)))]]
     )
 
-    d *= np.array(
+    d = d @ np.array(
         [[np.cos(np.radians(O.item(1))), 0, -1 * np.sin(np.radians(O.item(1)))],
         [0, 1, 0],
         [np.sin(np.radians(O.item(1))), 0, np.cos(np.radians(O.item(1)))]]
     )
 
-    d *= np.array(
+    d = d @ np.array(
         [[np.cos(np.radians(O.item(2))), np.sin(np.radians(O.item(2))), 0],
         [-1 * np.sin(np.radians(O.item(2))), np.cos(np.radians(O.item(2))), 0],
         [0, 0, 1]]
     )
     
-    d *= (a - c)
+    d = d @ (a - c)
 
-    return np.array([((e.item(2) * d.item(0)) / d.item(2)) + e.item(0), 
-    ((e.item(2) * d.item(1)) / d.item(2)) + e.item(1)])
+    return np.array([round(((e.item(2) * d.item(0)) / d.item(2)) + e.item(0)),
+    round(((e.item(2) * d.item(1)) / d.item(2)) + e.item(1))])
 
 def makeLine(pos0: np.array, pos1: np.array) -> np.array():
-    lineCoordinates = np.array([])
+    lineCoordinates = np.empty((0, 2))
     x0, y0 = pos0
     x1, y1 = pos1
     dx = abs(x1 - x0)
@@ -45,16 +45,26 @@ def makeLine(pos0: np.array, pos1: np.array) -> np.array():
     error = dy + dx
 
     while True:
-        lineCoordinates.append([x0, y0])
-        if error * 2 >= dy:
+        lineCoordinates = np.append(lineCoordinates, [[x0, y0]], axis = 0)
+        e2 = error * 2
+        if e2 >= dy:
             if x0 == x1:
-                return lineCoordinates #TODO: FINISH THIS
+                return lineCoordinates
+            error += dy
+            x0 += sx
+        if e2 <= dx:
+            if y0 == y1:
+                return lineCoordinates
+            error += dx
+            y0 += sy
 
 def drawOut(a: np.array, width: int, height: int):
     screen = [["░░" for y in range(height)] for x in range(width)]
 
     for coordinate in a:
-        screen[a.item(0)][a.item(1)] = "▓▓"
+        screen[round(coordinate[0])][round(coordinate[1])] = "▓▓"
 
     for row in reversed(list(zip(*screen))):
         print("".join(row))
+
+drawOut(makeLine(np.array([0,0]),np.array([3,4])),40,30)
