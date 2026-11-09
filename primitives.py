@@ -179,35 +179,48 @@ class model:
     def rotateOrigin(self, angles: np.array) -> None:
         return np.array([tri.rotateOrigin(angles) for tri in triArray])
 
-class Camera:
-    def __init__(self, c: np.array, O: np.array, e: np.array):
-        self.c = c
-        self.O = O
-        self.e = e
+class camera:
+    def __init__(self, cameraCoordinates: np.array, angles: np.array, displayCoordinates: np.array) -> None:
+        self.cameraCoordinates = cameraCoordinates
+        self.angles = angles
+        self.displayCoordinates = displayCoordinates
 
     def projection2D(self, a: np.array) -> np.array:
-        d = np.identity(3)
+        cameraTransform = np.identity(3)
 
-        d = d @ np.array(
+        cameraTransform = cameraTransform @ np.array(
             [[1, 0, 0],
-            [0, np.cos(np.radians(self.O.item(0))), np.sin(np.radians(self.O.item(0)))],
-            [0, -1 * np.sin(np.radians(self.O.item(0))), np.cos(np.radians(self.O.item(0)))]]
+            [0, np.cos(np.radians(self.angles.item(0))), np.sin(np.radians(self.angles.item(0)))],
+            [0, -1 * np.sin(np.radians(self.angles.item(0))), np.cos(np.radians(self.angles.item(0)))]]
         )
 
-        d = d @ np.array(
-            [[np.cos(np.radians(self.O.item(1))), 0, -1 * np.sin(np.radians(self.O.item(1)))],
+        cameraTransform = cameraTransform @ np.array(
+            [[np.cos(np.radians(self.angles.item(1))), 0, -1 * np.sin(np.radians(self.angles.item(1)))],
             [0, 1, 0],
-            [np.sin(np.radians(self.O.item(1))), 0, np.cos(np.radians(self.O.item(1)))]]
+            [np.sin(np.radians(self.angles.item(1))), 0, np.cos(np.radians(self.angles.item(1)))]]
         )
 
-        d = d @ np.array(
-            [[np.cos(np.radians(self.O.item(2))), np.sin(np.radians(self.O.item(2))), 0],
-            [-1 * np.sin(np.radians(self.O.item(2))), np.cos(np.radians(self.O.item(2))), 0],
+        cameraTransform = cameraTransform @ np.array(
+            [[np.cos(np.radians(self.angles.item(2))), np.sin(np.radians(self.angles.item(2))), 0],
+            [-1 * np.sin(np.radians(self.angles.item(2))), np.cos(np.radians(self.angles.item(2))), 0],
             [0, 0, 1]]
         )
 
-        d = d @ (a - self.c)
+        cameraTransform = cameraTransform @ (a - self.cameraCoordinates)
 
-        return np.array([round(((self.e.item(2) * d.item(0)) / d.item(2)) + self.e.item(0)),
-        round(((self.e.item(2) * d.item(1)) / d.item(2)) + self.e.item(1))])
-            
+        return np.array([round(((self.displayCoordinates.item(2) * cameraTransform.item(0)) / cameraTransform.item(2)) + self.displayCoordinates.item(0)),
+        round(((self.displayCoordinates.item(2) * cameraTransform.item(1)) / cameraTransform.item(2)) + self.displayCoordinates.item(1))])
+
+class screen:
+    def __init__(self, width: int, height: int):
+        self.width = width
+        self.height = height
+
+    def drawOut(self, a: np.array):
+        screen = [["░░" for y in range(self.height)] for x in range(self.width)]
+
+        for coordinate in a:
+            screen[round(coordinate[0])][round(coordinate[1])] = "▓▓"
+
+        for row in reversed(list(zip(*screen))):
+            print("".join(row))
