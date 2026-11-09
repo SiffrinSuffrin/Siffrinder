@@ -24,8 +24,9 @@ class point2D:
 
     def rotateOrigin(self, angle: float) -> None:
         # bad bad bad bad. awful. assumes around origin
-        self.x = (self.x * np.cos(np.radians(angle))) - (self.y * np.sin(np.radians(angle)))
+        tempX = (self.x * np.cos(np.radians(angle))) - (self.y * np.sin(np.radians(angle)))
         self.y = (self.x * np.sin(np.radians(angle))) + (self.y * np.cos(np.radians(angle)))
+        self.x = tempX
 
 
 class line2D:
@@ -141,9 +142,9 @@ class tri: # technically a subclass of point3D but there's really no point in in
         return np.array([self.vertex0.getCoordinates(), self.vertex1.getCoordinates(), self.vertex2.getCoordinates()])
 
     def getEdges(self) -> np.array:
-        return np.array([line3D(self.vertex0.getCoordinates(), self.vertex1.getCoordinates()), 
-        line3D(self.vertex1.getCoordinates(), self.vertex2.getCoordinates()), 
-        line3D(self.vertex0.getCoordinates(), self.vertex2.getCoordinates())])
+        return np.array([line3D(self.vertex0, self.vertex1), 
+        line3D(self.vertex1, self.vertex2), 
+        line3D(self.vertex0, self.vertex2)])
 
     def translate(self, coordinates: np.array) -> None:
         self.vertex0.translate(coordinates)
