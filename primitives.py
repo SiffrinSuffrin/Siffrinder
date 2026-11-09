@@ -35,7 +35,7 @@ class line2D:
         self.vertex1 = vertex1
 
     def getLength(self) -> float:
-        return np.sqrt(((self.vertex0.getX - self.vertex1.getX)**2) + ((self.vertex0.getY - self.vertex1.getY)**2))
+        return np.sqrt(((self.vertex0.getX() - self.vertex1.getX())**2) + ((self.vertex0.getY() - self.vertex1.getY())**2))
 
     def getEndpoints(self) -> np.array:
         return np.array([self.vertex0, self.vertex1])
@@ -116,14 +116,14 @@ class point3D(point2D):
         self.x = temp.item(0)
         self.y = temp.item(1)
         self.z = temp.item(2)
-        
+
 class line3D:
     def __init__(self, vertex0: point3D, vertex1: point3D) -> None:
         self.vertex0 = vertex0
         self.vertex1 = vertex1
 
     def getLength(self) -> float:
-        return np.sqrt(((self.vertex0.getX - self.vertex1.getX)**2) + ((self.vertex0.getY - self.vertex1.getY)**2) + ((self.vertex0.getZ - self.vertex1.getZ)**2))
+        return np.sqrt(((self.vertex0.getX() - self.vertex1.getX())**2) + ((self.vertex0.getY() - self.vertex1.getY())**2) + ((self.vertex0.getZ() - self.vertex1.getZ())**2))
 
     def getEndpoints(self) -> np.array:
         return np.array([self.vertex0, self.vertex1])
