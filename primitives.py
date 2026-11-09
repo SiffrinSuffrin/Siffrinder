@@ -41,8 +41,8 @@ class line2D:
 
     def getCoordinates(self) -> np.array: # 1:1 implementation of the exact algorithim on wikipedia #btw
         lineCoordinates = np.empty((0, 2))
-        x0, y0 = self.vertex0
-        x1, y1 = self.vertex1
+        x0, y0 = self.vertex0.getCoordinates()
+        x1, y1 = self.vertex1.getCoordinates()
         dx = abs(x1 - x0)
 
         if x0 < x1:
@@ -97,7 +97,7 @@ class point3D(point2D):
         # oughhh... if the 2d one was awful, this is SUPER awful. assumes around origin
         angleX = np.radians(angles.item(0))
         angleY = np.radians(angles.item(1))
-        angleY = np.radians(angles.item(2))
+        angleZ = np.radians(angles.item(2))
 
         temp = np.array([self.x, self.y, self.z])
         temp = temp @ np.array([1, 0, 0, 0],
@@ -165,19 +165,19 @@ class model:
         self.triArray = triArray
 
     def getCoordinates(self) -> np.array:
-        return np.array([tri.getCoordinates() for tri in triArray])
+        return np.array([tri.getCoordinates() for tri in self.triArray])
 
     def getEdges(self) -> np.array:
-        return np.array([tri.getEdges() for tri in triArray])
+        return np.array([tri.getEdges() for tri in self.triArray])
 
     def translate(self, coordinates: np.array) -> None:
-        return np.array([tri.translate(coordinates) for tri in triArray])
+        return np.array([tri.translate(coordinates) for tri in self.triArray])
 
     def scale(self, constants: np.array) -> None:
-        return np.array([tri.scale(constants) for tri in triArray])
+        return np.array([tri.scale(constants) for tri in self.triArray])
 
     def rotateOrigin(self, angles: np.array) -> None:
-        return np.array([tri.rotateOrigin(angles) for tri in triArray])
+        return np.array([tri.rotateOrigin(angles) for tri in self.triArray])
 
 class camera:
     def __init__(self, cameraCoordinates: np.array, angles: np.array, displayCoordinates: np.array) -> None:
