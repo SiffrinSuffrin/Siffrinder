@@ -1,7 +1,7 @@
 import numpy as np
 
 class point2D:
-    def __init__(self, x: int, y: int) -> None:
+    def __init__(self, x: float, y: float) -> None:
         self.x = x
         self.y = y
 
@@ -19,14 +19,14 @@ class point2D:
         self.x *= constants.item(0)
         self.y *= constants.item(1)
 
-    def rotate(self, angle: int) -> None:
-        # bad bad bad bad. awful. 
+    def rotate(self, angle: float) -> None:
+        # bad bad bad bad. awful. assumes around origin
         self.x = (self.x * np.cos(np.radians(angle))) - (self.y * np.sin(np.radians(angle)))
         self.y = (self.x * np.sin(np.radians(angle))) + (self.y * np.cos(np.radians(angle)))
 
 
 class point3D(point2D):
-    def __init__(self, x: int, y: int, z: int) -> None:
+    def __init__(self, x: float, y: float, z: float) -> None:
         # initalizes the 3d point
         super().__init__(x, y)
         self.z = z
@@ -46,13 +46,30 @@ class point3D(point2D):
         self.z *= constants.item(2)
 
     def rotate(self, angles: np.array) -> None:
-        # oughhh... if the 2d one was awful, this is SUPER awful
+        # oughhh... if the 2d one was awful, this is SUPER awful. assumes around origin
+        angleX = np.radians(angles.item(0))
+        angleY = np.radians(angles.item(1))
+        angleY = np.radians(angles.item(2))
+
         temp = np.array([self.x, self.y, self.z])
         temp = temp @ np.array([1, 0, 0, 0],
-                               [0, np.cos(np.radians(angles.item(0))), np.sin(np.radians(angles.item(0))), 0],
-                               [0, -1 * np.sin(np.radians(angles.item(0))), np.cos(np.radians(angles.item(0))), 0]
+                               [0, np.cos(angleX), np.sin(angleX), 0],
+                               [0, -1 * np.sin(angleX), np.cos(angleX), 0]
                                [0, 0, 0, 1]) # rotate by x
-        temp = temp @ np.array([],[],[],[]) # TODO: finish this
+
+        temp = temp @ np.array([np.cos(angleY), 0, -1 * np.sin(angleY), 0],
+                               [0, 1, 0, 0],
+                               [np.sin(angleY), 0, np.cos(angleY), 0],
+                               [0, 0, 0, 1]) # rotate by y
+        
+        temp = temp @ np.array([np.cos(angleZ), np.sin(angleZ), 0, 0],
+                               [-1 * np.sin(angleZ), np.cos(angleZ), 0, 0],
+                               [0, 0, 1, 0],
+                               [0, 0, 0, 1]) # last but not *z*east, rotate by z
+
+        self.x = temp.item(0)
+        self.y = temp.item(1)
+        self.z = temp.item(2)
 
 
 class tri: # technically a subclass of point3D but there's really no point in inheriting it
@@ -70,11 +87,16 @@ class tri: # technically a subclass of point3D but there's really no point in in
         [self.pos0.getCoordinates(), self.pos2.getCoordinates()]])
 
     def translate(self, coordinates: np.array) -> None:
-        self.pos0 = self.pos0.translate(coordinates)
-        self.pos1 = self.pos1.translate(coordinates)
-        self.pos2 = self.pos2.translate(coordinates)
+        self.pos0.translate(coordinates)
+        self.pos1.translate(coordinates)
+        self.pos2.translate(coordinates)
 
     def scale(self, constants: np.array) -> None:
-        self.pos0 = self.pos0.scale(constants)
-        self.pos1 = self.pos1.scale(constants)
-        self.pos2 = self.pos2.scale(constants)
+        self.pos0.scale(constants)
+        self.pos1.scale(constants)
+        self.pos2.scale(constants)
+
+    def rotate(self, angles: np.array) -> None:
+        self.pos0.rotate(angles)
+        self.pos1.rotate(angles)
+        self.pos2.rotate(angles)
