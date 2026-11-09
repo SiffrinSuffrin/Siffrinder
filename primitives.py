@@ -5,6 +5,12 @@ class point2D:
         self.x = x
         self.y = y
 
+    def getX(self) -> float:
+        return self.x
+    
+    def getY(self) -> float:
+        return self.y
+
     def getCoordinates(self) -> np.array:
         # self explanatory
         return np.array([self.x, self.y])
@@ -25,11 +31,59 @@ class point2D:
         self.y = (self.x * np.sin(np.radians(angle))) + (self.y * np.cos(np.radians(angle)))
 
 
+class line2D:
+    def __init__(self, pos0: point2D, pos1: point2D) -> None:
+        self.pos0 = pos0
+        self.pos1 = pos1
+
+    def getLength(self) -> float:
+        return np.sqrt(((self.pos0.getX - self.pos1.getX)**2) + ((self.pos0.getY - self.pos1.getY)**2))
+
+    def getEndpoints(self) -> np.array:
+        return np.array([self.pos0, self.pos1])
+
+    def getCoordinates(self) -> np.array: # 1:1 implementation of the exact algorithim on wikipedia #btw
+        lineCoordinates = np.empty((0, 2))
+        x0, y0 = self.pos0
+        x1, y1 = self.pos1
+        dx = abs(x1 - x0)
+
+        if x0 < x1:
+            sx = 1
+        else:
+            sx = -1
+
+        dy = -abs(y1 - y0)
+
+        if y0 < y1:
+            sy = 1
+        else:
+            sy = -1
+
+        error = dy + dx
+        while True:
+            lineCoordinates = np.append(lineCoordinates, [[x0, y0]], axis = 0)
+            e2 = error * 2
+            if e2 >= dy:
+                if x0 == x1:
+                    return lineCoordinates
+                error += dy
+                x0 += sx
+            if e2 <= dx:
+                if y0 == y1:
+                    return lineCoordinates
+                error += dx
+                y0 += sy
+
+
 class point3D(point2D):
     def __init__(self, x: float, y: float, z: float) -> None:
         # initalizes the 3d point
         super().__init__(x, y)
         self.z = z
+
+    def getZ(self) -> float:
+        return self.z
 
     def getCoordinates(self) -> np.array:
         # self explanatory
@@ -71,6 +125,17 @@ class point3D(point2D):
         self.y = temp.item(1)
         self.z = temp.item(2)
 
+class line3D:
+    def __init__(self, pos0: point3D, pos1: point3D) -> None:
+        self.pos0 = pos0
+        self.pos1 = pos1
+
+    def getLength(self) -> float:
+        return np.sqrt(((self.pos0.getX - self.pos1.getX)**2) + ((self.pos0.getY - self.pos1.getY)**2) + ((self.pos0.getZ - self.pos1.getZ)**2))
+
+    def getEndpoints(self) -> np.array:
+        return np.array([self.pos0, self.pos1])
+
 
 class tri: # technically a subclass of point3D but there's really no point in inheriting it
     def __init__(self, pos0: point3D, pos1: point3D, pos2: point3D) -> None:
@@ -82,9 +147,9 @@ class tri: # technically a subclass of point3D but there's really no point in in
         return np.array([self.pos0.getCoordinates(), self.pos1.getCoordinates(), self.pos2.getCoordinates()])
 
     def getEdges(self) -> np.array:
-        return np.array([[self.pos0.getCoordinates(), self.pos1.getCoordinates()], 
-        [self.pos1.getCoordinates(), self.pos2.getCoordinates()], 
-        [self.pos0.getCoordinates(), self.pos2.getCoordinates()]])
+        return np.array([line3D(self.pos0.getCoordinates(), self.pos1.getCoordinates()), 
+        line3D(self.pos1.getCoordinates(), self.pos2.getCoordinates()), 
+        line3D(self.pos0.getCoordinates(), self.pos2.getCoordinates())])
 
     def translate(self, coordinates: np.array) -> None:
         self.pos0.translate(coordinates)
