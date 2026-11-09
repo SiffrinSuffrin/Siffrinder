@@ -1,17 +1,17 @@
 import primitives, numpy as np, time
 
-cube = primitives.model(np.array([primitives.tri(primitives.point3D(0,0,0), primitives.point3D(1,0,0), primitives.point3D(1,1,0)),
-primitives.tri(primitives.point3D(0,0,0), primitives.point3D(0,1,0), primitives.point3D(1,1,0)),
-primitives.tri(primitives.point3D(0,0,0), primitives.point3D(0,0,1), primitives.point3D(0,1,1)),
-primitives.tri(primitives.point3D(0,0,0), primitives.point3D(0,1,0), primitives.point3D(0,1,1)),
-primitives.tri(primitives.point3D(0,0,1), primitives.point3D(1,0,1), primitives.point3D(1,1,1)),
-primitives.tri(primitives.point3D(0,0,1), primitives.point3D(0,1,1), primitives.point3D(1,1,1)),
-primitives.tri(primitives.point3D(1,0,0), primitives.point3D(1,0,1), primitives.point3D(1,1,1)),
-primitives.tri(primitives.point3D(1,0,0), primitives.point3D(1,1,0), primitives.point3D(1,1,1)),
-primitives.tri(primitives.point3D(0,0,0), primitives.point3D(0,0,1), primitives.point3D(1,0,0)),
-primitives.tri(primitives.point3D(1,0,1), primitives.point3D(0,0,1), primitives.point3D(1,0,0)),
-primitives.tri(primitives.point3D(0,1,0), primitives.point3D(0,1,1), primitives.point3D(1,1,0)),
-primitives.tri(primitives.point3D(1,1,1), primitives.point3D(0,1,1), primitives.point3D(1,1,0))])) # this took me 20 minutes and a whiteboard to work out btw
+cube = primitives.model(np.array([primitives.tri(primitives.point3D(-0.5,-0.5,-0.5), primitives.point3D(0.5,-0.5,-0.5), primitives.point3D(0.5,0.5,-0.5)),
+primitives.tri(primitives.point3D(-0.5,-0.5,-0.5), primitives.point3D(-0.5,0.5,-0.5), primitives.point3D(0.5,0.5,-0.5)),
+primitives.tri(primitives.point3D(-0.5,-0.5,-0.5), primitives.point3D(-0.5,-0.5,0.5), primitives.point3D(-0.5,0.5,0.5)),
+primitives.tri(primitives.point3D(-0.5,-0.5,-0.5), primitives.point3D(-0.5,0.5,-0.5), primitives.point3D(-0.5,0.5,0.5)),
+primitives.tri(primitives.point3D(-0.5,-0.5,0.5), primitives.point3D(0.5,-0.5,0.5), primitives.point3D(0.5,0.5,0.5)),
+primitives.tri(primitives.point3D(-0.5,-0.5,0.5), primitives.point3D(-0.5,0.5,0.5), primitives.point3D(0.5,0.5,0.5)),
+primitives.tri(primitives.point3D(0.5,-0.5,-0.5), primitives.point3D(0.5,-0.5,0.5), primitives.point3D(0.5,0.5,0.5)),
+primitives.tri(primitives.point3D(0.5,-0.5,-0.5), primitives.point3D(0.5,0.5,-0.5), primitives.point3D(0.5,0.5,0.5)),
+primitives.tri(primitives.point3D(-0.5,-0.5,-0.5), primitives.point3D(-0.5,-0.5,0.5), primitives.point3D(0.5,-0.5,-0.5)),
+primitives.tri(primitives.point3D(0.5,-0.5,0.5), primitives.point3D(-0.5,-0.5,0.5), primitives.point3D(0.5,-0.5,-0.5)),
+primitives.tri(primitives.point3D(-0.5,0.5,-0.5), primitives.point3D(-0.5,0.5,0.5), primitives.point3D(0.5,0.5,-0.5)),
+primitives.tri(primitives.point3D(0.5,0.5,0.5), primitives.point3D(-0.5,0.5,0.5), primitives.point3D(0.5,0.5,-0.5))])) # this took me 20 minutes and a whiteboard to work out btw
 
 cam = primitives.camera(np.array([0, 0, -2]), np.array([0, 0, 0]), np.array([20, 10, 18]))
 display = primitives.screen(40, 30)
@@ -27,4 +27,4 @@ while True:
 
     display.drawOut(points)
     cube.rotateOrigin(np.array([2, 3, 1]))
-    time.sleep(0.05)
+    time.sleep(1/60)
