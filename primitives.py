@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np, os
 
 class point2D:
     def __init__(self, x: float, y: float) -> None:
@@ -215,6 +215,7 @@ class screen:
         self.height = height
 
     def drawOut(self, a: np.array):
+        os.system('cls' if os.name == 'nt' else 'clear')
         screen = [["░░" for y in range(self.height)] for x in range(self.width)]
 
         for coordinate in a:
