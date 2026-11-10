@@ -210,17 +210,20 @@ class camera:
         round(((self.displayCoordinates.item(2) * cameraTransform.item(1)) / cameraTransform.item(2)) + self.displayCoordinates.item(1))])
 
 class screen:
-    def __init__(self, width: int, height: int):
+    def __init__(self, width: int, height: int)  -> None:
         self.width = width
         self.height = height
+        self.frame = np.array([])
 
-    def drawOut(self, a: np.array):
-        os.system('cls' if os.name == 'nt' else 'clear')
-        screen = [["░░" for y in range(self.height)] for x in range(self.width)]
+    def newFrame(self) -> None:
+        self.frame = np.array([["  " for y in range(self.height)] for x in range(self.width)])
 
+    def plotPoints(self, a: np.array) -> None:
         for coordinate in a:
             if 0 <= round(coordinate.item(0)) < self.width and 0 <= round(coordinate.item(1)) < self.height:
-                screen[round(coordinate.item(0))][round(coordinate.item(1))] = "▓▓"
+                self.frame[round(coordinate.item(0))][round(coordinate.item(1))] = "▓▓"
 
-        for row in reversed(list(zip(*screen))): # not ashamed to admit i googled this
+    def show(self) -> None:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        for row in reversed(list(zip(*self.frame))): # not ashamed to admit i googled this
             print("".join(row))
