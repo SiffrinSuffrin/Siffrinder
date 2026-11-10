@@ -1,19 +1,19 @@
-import siffrinderprimitives as prim, numpy as np, time
+import siffrinderPrimitives as prim, numpy as np, time
 
-cube = prim.model(np.array([prim.tri(prim.point3D(-0.5,-0.5,-0.5), prim.point3D(0.5,-0.5,-0.5), prim.point3D(0.5,0.5,-0.5)),
-prim.tri(prim.point3D(-0.5,-0.5,-0.5), prim.point3D(-0.5,0.5,-0.5), prim.point3D(0.5,0.5,-0.5)),
-prim.tri(prim.point3D(-0.5,-0.5,-0.5), prim.point3D(-0.5,-0.5,0.5), prim.point3D(-0.5,0.5,0.5)),
-prim.tri(prim.point3D(-0.5,-0.5,-0.5), prim.point3D(-0.5,0.5,-0.5), prim.point3D(-0.5,0.5,0.5)),
-prim.tri(prim.point3D(-0.5,-0.5,0.5), prim.point3D(0.5,-0.5,0.5), prim.point3D(0.5,0.5,0.5)),
-prim.tri(prim.point3D(-0.5,-0.5,0.5), prim.point3D(-0.5,0.5,0.5), prim.point3D(0.5,0.5,0.5)),
-prim.tri(prim.point3D(0.5,-0.5,-0.5), prim.point3D(0.5,-0.5,0.5), prim.point3D(0.5,0.5,0.5)),
-prim.tri(prim.point3D(0.5,-0.5,-0.5), prim.point3D(0.5,0.5,-0.5), prim.point3D(0.5,0.5,0.5)),
-prim.tri(prim.point3D(-0.5,-0.5,-0.5), prim.point3D(-0.5,-0.5,0.5), prim.point3D(0.5,-0.5,-0.5)),
-prim.tri(prim.point3D(0.5,-0.5,0.5), prim.point3D(-0.5,-0.5,0.5), prim.point3D(0.5,-0.5,-0.5)),
-prim.tri(prim.point3D(-0.5,0.5,-0.5), prim.point3D(-0.5,0.5,0.5), prim.point3D(0.5,0.5,-0.5)),
-prim.tri(prim.point3D(0.5,0.5,0.5), prim.point3D(-0.5,0.5,0.5), prim.point3D(0.5,0.5,-0.5))])) # this took me 20 minutes and a whiteboard to work out btw
+cube = prim.model(np.array([prim.tri(prim.point3D(-1,-1,-1), prim.point3D(1,-1,-1), prim.point3D(1,1,-1)),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,1,-1), prim.point3D(1,1,-1)),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,-1,1), prim.point3D(-1,1,1)),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,1,-1), prim.point3D(-1,1,1)),
+prim.tri(prim.point3D(-1,-1,1), prim.point3D(1,-1,1), prim.point3D(1,1,1)),
+prim.tri(prim.point3D(-1,-1,1), prim.point3D(-1,1,1), prim.point3D(1,1,1)),
+prim.tri(prim.point3D(1,-1,-1), prim.point3D(1,-1,1), prim.point3D(1,1,1)),
+prim.tri(prim.point3D(1,-1,-1), prim.point3D(1,1,-1), prim.point3D(1,1,1)),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,-1,1), prim.point3D(1,-1,-1)),
+prim.tri(prim.point3D(1,-1,1), prim.point3D(-1,-1,1), prim.point3D(1,-1,-1)),
+prim.tri(prim.point3D(-1,1,-1), prim.point3D(-1,1,1), prim.point3D(1,1,-1)),
+prim.tri(prim.point3D(1,1,1), prim.point3D(-1,1,1), prim.point3D(1,1,-1))])) # this took me 20 minutes and a whiteboard to work out btw
 
-cam = prim.camera(np.array([0, 0, -2]), np.array([0, 0, 0]), np.array([20, 10, 18]))
+cam = prim.camera(np.array([0, 0, -2.5]), np.array([0, 0, 0]), np.array([20, 15, 18]))
 display = prim.screen(40, 30)
 
 while True:
