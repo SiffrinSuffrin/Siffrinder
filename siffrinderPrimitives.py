@@ -41,7 +41,7 @@ class line2D:
         return np.array([self.vertex0, self.vertex1])
 
     def getCoordinates(self) -> np.array: # 1:1 implementation of the exact algorithim on wikipedia #btw
-        lineCoordinates = np.empty((0, 2))
+        lineCoordinates = np.array([])
         x0, y0 = self.vertex0.getCoordinates()
         x1, y1 = self.vertex1.getCoordinates()
         dx = abs(x1 - x0)
@@ -60,7 +60,7 @@ class line2D:
 
         error = dy + dx
         while True:
-            lineCoordinates = np.append(lineCoordinates, [[x0, y0]], axis = 0)
+            lineCoordinates = np.append(lineCoordinates, point2D(x0, y0))
             e2 = error * 2
             if e2 >= dy:
                 if x0 == x1:
@@ -210,7 +210,7 @@ class camera:
         round(((self.displayCoordinates.item(2) * cameraTransform.item(1)) / cameraTransform.item(2)) + self.displayCoordinates.item(1))])
 
 class screen:
-    def __init__(self, width: int, height: int)  -> None:
+    def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
         self.frame = np.array([])
@@ -218,10 +218,13 @@ class screen:
     def newFrame(self) -> None:
         self.frame = np.array([["  " for y in range(self.height)] for x in range(self.width)])
 
+    def plotRaw(self, coordinate: point2D, text: str) -> None:
+        self.frame[round(coordinate.getX())][round(coordinate.getY())] = text
+
     def plotPoints(self, a: np.array) -> None:
         for coordinate in a:
-            if 0 <= round(coordinate.item(0)) < self.width and 0 <= round(coordinate.item(1)) < self.height:
-                self.frame[round(coordinate.item(0))][round(coordinate.item(1))] = "▓▓"
+            if 0 <= round(coordinate.getX()) < self.width and 0 <= round(coordinate.getY()) < self.height:
+                self.frame[round(coordinate.getX())][round(coordinate.getY())] = "▓▓"
 
     def show(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')
