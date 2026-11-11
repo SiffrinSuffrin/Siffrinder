@@ -237,6 +237,33 @@ class screen:
                 self.frame[round(coordinate.getX())][round(coordinate.getY())] = shading
                 self.depth[round(coordinate.getX())][round(coordinate.getY())] = coordinateDepth
 
+    def edgeFunction(self, a: np.array, b: np.array, p: np.array) -> float:
+        return ((b[0] - a[0]) * (p[1] - a[1])) - ((b[1] - a[1]) * (p[0] - a[0]))
+
+    def fillTri(self, vertex0: np.array, vertex1: np.array, vertex2: np.array, depth0: float, depth1: float, depth2: float, shading: str) -> None:
+        area = self.edgeFunction(vertex0, vertex1, vertex2)
+        if area == 0:
+            return
+
+        minX = max(0, min(vertex0[0], vertex1[0], vertex2[0]))
+        maxX = min(self.width - 1, max(vertex0[0], vertex1[0], vertex2[0]))
+        minY = max(0, min(vertex0[1], vertex1[1], vertex2[1]))
+        maxY = min(self.height - 1, max(vertex0[1], vertex1[1], vertex2[1]))
+
+        filledPixels = []
+        for x in range(minX, maxX + 1):
+            for y in range(minY, maxY + 1):
+                pixel = np.array([x, y])
+                weight0 = self.edgeFunction(vertex1, vertex2, pixel) / area
+                weight1 = self.edgeFunction(vertex2, vertex0, pixel) / area
+                weight2 = self.edgeFunction(vertex0, vertex1, pixel) / area
+
+                if weight0 >= 0 and weight1 >= 0 and weight2 >= 0:
+                    pixelDepth = 1 / ((weight0 / depth0) + (weight1 / depth1) + (weight2 / depth2)) # weighted average depth
+                    filledPixels.append((point2D(x, y), pixelDepth, shading))
+
+        self.plotPoints(filledPixels)
+
     def show(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')
         for row in reversed(list(zip(*self.frame))): # not ashamed to admit i googled this
