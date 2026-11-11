@@ -130,11 +130,12 @@ class line3D:
 
 
 class tri: # technically a subclass of point3D but there's really no point in inheriting it
-    def __init__(self, vertex0: point3D, vertex1: point3D, vertex2: point3D, shading: str) -> None:
+    def __init__(self, vertex0: point3D, vertex1: point3D, vertex2: point3D, shading: tuple, texture: str) -> None:
         self.vertex0 = vertex0
         self.vertex1 = vertex1
         self.vertex2 = vertex2
         self.shading = shading
+        self.texture = texture
 
     def getCoordinates(self) -> np.array:
         return np.array([self.vertex0.getCoordinates(), self.vertex1.getCoordinates(), self.vertex2.getCoordinates()])
@@ -144,8 +145,11 @@ class tri: # technically a subclass of point3D but there's really no point in in
         line3D(self.vertex1, self.vertex2), 
         line3D(self.vertex0, self.vertex2)])
 
-    def getShading(self) -> str:
+    def getShading(self) -> tuple:
         return self.shading
+
+    def getTexture(self) -> str:
+        return self.texture
 
     def translate(self, coordinates: np.array) -> None:
         self.vertex0.translate(coordinates)
@@ -226,21 +230,23 @@ class screen:
     def newFrame(self) -> None:
         self.frame = np.array([["  " for y in range(self.height)] for x in range(self.width)])
         self.depth = np.array([[float("inf") for y in range(self.height)] for x in range(self.width)])
+        self.colour = np.array([[(0,0,0) for y in range(self.height)] for x in range(self.width)])
 
     def plotRaw(self, coordinate: point2D, text: str) -> None:
         self.frame[round(coordinate.getX())][round(coordinate.getY())] = text
 
     def plotPoints(self, a: np.array/list) -> None:
         for item in a:
-            coordinate, coordinateDepth, shading = item
+            coordinate, coordinateDepth, shading, texture = item
             if 0 <= round(coordinate.getX()) < self.width and 0 <= round(coordinate.getY()) < self.height and coordinateDepth <= self.depth[round(coordinate.getX())][round(coordinate.getY())]:
-                self.frame[round(coordinate.getX())][round(coordinate.getY())] = shading
+                self.frame[round(coordinate.getX())][round(coordinate.getY())] = texture
                 self.depth[round(coordinate.getX())][round(coordinate.getY())] = coordinateDepth
+                self.colour[round(coordinate.getX())][round(coordinate.getY())] = shading
 
     def edgeFunction(self, a: np.array, b: np.array, p: np.array) -> float:
         return ((b[0] - a[0]) * (p[1] - a[1])) - ((b[1] - a[1]) * (p[0] - a[0]))
 
-    def fillTri(self, vertex0: np.array, vertex1: np.array, vertex2: np.array, depth0: float, depth1: float, depth2: float, shading: str) -> None:
+    def fillTri(self, vertex0: np.array, vertex1: np.array, vertex2: np.array, depth0: float, depth1: float, depth2: float, shading: tuple, texture: str) -> None:
         area = self.edgeFunction(vertex0, vertex1, vertex2)
         if area == 0:
             return
@@ -260,11 +266,11 @@ class screen:
 
                 if weight0 >= 0 and weight1 >= 0 and weight2 >= 0:
                     pixelDepth = 1 / ((weight0 / depth0) + (weight1 / depth1) + (weight2 / depth2)) # weighted average depth
-                    filledPixels.append((point2D(x, y), pixelDepth, shading))
+                    filledPixels.append((point2D(x, y), pixelDepth, shading, texture))
 
         self.plotPoints(filledPixels)
 
     def show(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')
-        for row in reversed(list(zip(*self.frame))): # not ashamed to admit i googled this
-            print("".join(row))
+        for charRow, colourRow in zip(reversed(list(zip(*self.frame))), reversed(list(zip(*self.colour)))): # not ashamed to admit i googled this
+            print("".join(f"\033[38;2;{colour[0]};{colour[1]};{colour[2]}m{char}\033[0m" for char, colour in zip(charRow, colourRow)))
