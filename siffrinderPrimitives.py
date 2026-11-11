@@ -130,10 +130,11 @@ class line3D:
 
 
 class tri: # technically a subclass of point3D but there's really no point in inheriting it
-    def __init__(self, vertex0: point3D, vertex1: point3D, vertex2: point3D) -> None:
+    def __init__(self, vertex0: point3D, vertex1: point3D, vertex2: point3D, shading: str) -> None:
         self.vertex0 = vertex0
         self.vertex1 = vertex1
         self.vertex2 = vertex2
+        self.shading = shading
 
     def getCoordinates(self) -> np.array:
         return np.array([self.vertex0.getCoordinates(), self.vertex1.getCoordinates(), self.vertex2.getCoordinates()])
@@ -142,6 +143,9 @@ class tri: # technically a subclass of point3D but there's really no point in in
         return np.array([line3D(self.vertex0, self.vertex1), 
         line3D(self.vertex1, self.vertex2), 
         line3D(self.vertex0, self.vertex2)])
+
+    def getShading(self) -> str:
+        return self.shading
 
     def translate(self, coordinates: np.array) -> None:
         self.vertex0.translate(coordinates)
@@ -161,6 +165,9 @@ class tri: # technically a subclass of point3D but there's really no point in in
 class model:
     def __init__(self, triArray: np.array) -> None: # input should be an array of tri objects
         self.triArray = triArray
+
+    def getTri(self) -> np.array:
+        return self.triArray
 
     def getCoordinates(self) -> np.array:
         return np.array([tri.getCoordinates() for tri in self.triArray])
@@ -183,7 +190,7 @@ class camera:
         self.angles = angles
         self.displayCoordinates = displayCoordinates
 
-    def projection2D(self, a: np.array) -> np.array:
+    def projection2D(self, a: np.array) -> tuple:
         cameraTransform = np.identity(3)
 
         cameraTransform = cameraTransform @ np.array(
@@ -207,24 +214,28 @@ class camera:
         cameraTransform = cameraTransform @ (a - self.cameraCoordinates)
 
         return np.array([round(((self.displayCoordinates.item(2) * cameraTransform.item(0)) / cameraTransform.item(2)) + self.displayCoordinates.item(0)),
-        round(((self.displayCoordinates.item(2) * cameraTransform.item(1)) / cameraTransform.item(2)) + self.displayCoordinates.item(1))])
+        round(((self.displayCoordinates.item(2) * cameraTransform.item(1)) / cameraTransform.item(2)) + self.displayCoordinates.item(1))]), cameraTransform.item(2)
 
 class screen:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
         self.frame = np.array([])
+        self.depth = np.array([])
 
     def newFrame(self) -> None:
         self.frame = np.array([["  " for y in range(self.height)] for x in range(self.width)])
+        self.depth = np.array([[float("inf") for y in range(self.height)] for x in range(self.width)])
 
     def plotRaw(self, coordinate: point2D, text: str) -> None:
         self.frame[round(coordinate.getX())][round(coordinate.getY())] = text
 
-    def plotPoints(self, a: np.array) -> None:
-        for coordinate in a:
-            if 0 <= round(coordinate.getX()) < self.width and 0 <= round(coordinate.getY()) < self.height:
-                self.frame[round(coordinate.getX())][round(coordinate.getY())] = "▓▓"
+    def plotPoints(self, a: np.array/list) -> None:
+        for item in a:
+            coordinate, coordinateDepth, shading = item
+            if 0 <= round(coordinate.getX()) < self.width and 0 <= round(coordinate.getY()) < self.height and coordinateDepth <= self.depth[round(coordinate.getX())][round(coordinate.getY())]:
+                self.frame[round(coordinate.getX())][round(coordinate.getY())] = shading
+                self.depth[round(coordinate.getX())][round(coordinate.getY())] = coordinateDepth
 
     def show(self) -> None:
         os.system('cls' if os.name == 'nt' else 'clear')
