@@ -1,6 +1,6 @@
-import siffrinderPrimitives as prim, numpy as np, time, random
+import siffrinderPrimitives as prim, numpy as np, time, random, string
 
-textures = ["██", "▖▖", "▗▗", "▘▘", "▙▙", "▚▚", "▛▛", "▜▜", "▝▝", "▞▞", "▟▟"]
+textures = list(string.ascii_uppercase)
 random.shuffle(textures)
 colours = [(0, 154, 68), (186, 12, 47), (0, 61, 165), (254, 80, 0), (255, 215, 0), (255, 255, 255)]
 random.shuffle(colours)
@@ -13,18 +13,18 @@ faceShading4, faceTexture4 = colours.pop(), textures.pop()
 faceShading5, faceTexture5 = colours.pop(), textures.pop()
 
 cube = prim.model(np.array([
-prim.tri(prim.point3D(-1,-1,-1), prim.point3D(1,-1,-1), prim.point3D(1,1,-1), faceShading0, faceTexture0),
-prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,1,-1), prim.point3D(1,1,-1), faceShading0, faceTexture0),
-prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,-1,1), prim.point3D(-1,1,1), faceShading1, faceTexture1),
-prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,1,-1), prim.point3D(-1,1,1), faceShading1, faceTexture1),
-prim.tri(prim.point3D(-1,-1,1), prim.point3D(1,-1,1), prim.point3D(1,1,1), faceShading2, faceTexture2),
-prim.tri(prim.point3D(-1,-1,1), prim.point3D(-1,1,1), prim.point3D(1,1,1), faceShading2, faceTexture2),
-prim.tri(prim.point3D(1,-1,-1), prim.point3D(1,-1,1), prim.point3D(1,1,1), faceShading3, faceTexture3),
-prim.tri(prim.point3D(1,-1,-1), prim.point3D(1,1,-1), prim.point3D(1,1,1), faceShading3, faceTexture3),
-prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,-1,1), prim.point3D(1,-1,-1), faceShading4, faceTexture4),
-prim.tri(prim.point3D(1,-1,1), prim.point3D(-1,-1,1), prim.point3D(1,-1,-1), faceShading4, faceTexture4),
-prim.tri(prim.point3D(-1,1,-1), prim.point3D(-1,1,1), prim.point3D(1,1,-1), faceShading5, faceTexture5),
-prim.tri(prim.point3D(1,1,1), prim.point3D(-1,1,1), prim.point3D(1,1,-1), faceShading5, faceTexture5)
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(1,-1,-1), prim.point3D(1,1,-1), faceShading0, f"{faceTexture0*2}"),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,1,-1), prim.point3D(1,1,-1), faceShading0, f"{faceTexture0*2}"),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,-1,1), prim.point3D(-1,1,1), faceShading1, f"{faceTexture1*2}"),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,1,-1), prim.point3D(-1,1,1), faceShading1, f"{faceTexture1*2}"),
+prim.tri(prim.point3D(-1,-1,1), prim.point3D(1,-1,1), prim.point3D(1,1,1), faceShading2, f"{faceTexture2*2}"),
+prim.tri(prim.point3D(-1,-1,1), prim.point3D(-1,1,1), prim.point3D(1,1,1), faceShading2, f"{faceTexture2*2}"),
+prim.tri(prim.point3D(1,-1,-1), prim.point3D(1,-1,1), prim.point3D(1,1,1), faceShading3, f"{faceTexture3*2}"),
+prim.tri(prim.point3D(1,-1,-1), prim.point3D(1,1,-1), prim.point3D(1,1,1), faceShading3, f"{faceTexture3*2}"),
+prim.tri(prim.point3D(-1,-1,-1), prim.point3D(-1,-1,1), prim.point3D(1,-1,-1), faceShading4, f"{faceTexture4*2}"),
+prim.tri(prim.point3D(1,-1,1), prim.point3D(-1,-1,1), prim.point3D(1,-1,-1), faceShading4, f"{faceTexture4*2}"),
+prim.tri(prim.point3D(-1,1,-1), prim.point3D(-1,1,1), prim.point3D(1,1,-1), faceShading5, f"{faceTexture5*2}"),
+prim.tri(prim.point3D(1,1,1), prim.point3D(-1,1,1), prim.point3D(1,1,-1), faceShading5, f"{faceTexture5*2}")
 ])) # this took me 20 minutes and a whiteboard to work out btw
 
 cam = prim.camera(np.array([0, 0, -2.5]), np.array([0, 0, 0]), np.array([20, 15, 18]))

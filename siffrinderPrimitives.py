@@ -230,7 +230,7 @@ class screen:
     def newFrame(self) -> None:
         self.frame = np.array([["  " for y in range(self.height)] for x in range(self.width)])
         self.depth = np.array([[float("inf") for y in range(self.height)] for x in range(self.width)])
-        self.colour = np.array([[(0,0,0) for y in range(self.height)] for x in range(self.width)])
+        self.colour = np.array([[(255,255,255) for y in range(self.height)] for x in range(self.width)])
 
     def plotRaw(self, coordinate: point2D, text: str) -> None:
         self.frame[round(coordinate.getX())][round(coordinate.getY())] = text
