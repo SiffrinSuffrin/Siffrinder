@@ -246,7 +246,7 @@ class screen:
     def edgeFunction(self, a: np.array, b: np.array, p: np.array) -> float:
         return ((b[0] - a[0]) * (p[1] - a[1])) - ((b[1] - a[1]) * (p[0] - a[0]))
 
-    def fillTri(self, vertex0: np.array, vertex1: np.array, vertex2: np.array, depth0: float, depth1: float, depth2: float, shading: tuple, texture: str) -> None:
+    def plotTri(self, vertex0: np.array, vertex1: np.array, vertex2: np.array, depth0: float, depth1: float, depth2: float, shading: tuple, texture: str) -> None:
         area = self.edgeFunction(vertex0, vertex1, vertex2)
         if area == 0:
             return
