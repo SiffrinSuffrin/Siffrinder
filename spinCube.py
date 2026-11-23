@@ -1,16 +1,13 @@
-import siffrinderPrimitives as prim, numpy as np, time, random, string
+import siffrinderPrimitives as prim, numpy as np, time, random
 
-textures = list(string.ascii_uppercase)
-random.shuffle(textures)
 colours = [(0, 154, 68), (186, 12, 47), (0, 61, 165), (254, 80, 0), (255, 215, 0), (255, 255, 255)]
-random.shuffle(colours)
 
-faceShading0, faceTexture0 = colours.pop(), textures.pop()
-faceShading1, faceTexture1 = colours.pop(), textures.pop()
-faceShading2, faceTexture2 = colours.pop(), textures.pop()
-faceShading3, faceTexture3 = colours.pop(), textures.pop()
-faceShading4, faceTexture4 = colours.pop(), textures.pop()
-faceShading5, faceTexture5 = colours.pop(), textures.pop()
+faceShading0, faceTexture0 = colours.pop(), "0"
+faceShading1, faceTexture1 = colours.pop(), "1"
+faceShading2, faceTexture2 = colours.pop(), "2"
+faceShading3, faceTexture3 = colours.pop(), "3"
+faceShading4, faceTexture4 = colours.pop(), "4"
+faceShading5, faceTexture5 = colours.pop(), "5"
 
 cube = prim.model(np.array([
 prim.tri(prim.point3D(-1,-1,-1), prim.point3D(1,-1,-1), prim.point3D(1,1,-1), faceShading0, f"{faceTexture0*2}"),
